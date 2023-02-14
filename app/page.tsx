@@ -1,8 +1,9 @@
 import { gql } from '@apollo/client';
-import Image from 'next/image';
 import { initializeApollo } from '../util/client';
+import ApolloClientProvider from './ApolloClientProvider';
+import GithubProfile from './GitHubProfile';
 
-type GitHubProfileResponse = {
+export type GitHubProfileResponse = {
   user: {
     name: string;
     avatarUrl: string;
@@ -44,17 +45,11 @@ export default async function HomePage() {
 
   return (
     <main>
-      <h1>{data.user.name}'s Profile</h1>
-      <Image
-        src={data.user.avatarUrl}
-        alt={`${data.user.name}'s avatar`}
-        width="400"
-        height="400"
-      />
-      <h2>Repositories</h2>
-      {data.user.repositories.edges.map((repository) => (
-        <li key={repository.node.id}>{repository.node.name}</li>
-      ))}
+      <ApolloClientProvider
+        initialApolloState={JSON.stringify(client.cache.extract())}
+      >
+        <GithubProfile />
+      </ApolloClientProvider>
     </main>
   );
 }
