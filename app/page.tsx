@@ -21,7 +21,7 @@ export type GitHubProfileResponse = {
 export default async function HomePage() {
   const client = initializeApollo(null);
 
-  const { data } = await client.query<GitHubProfileResponse>({
+  await client.query<GitHubProfileResponse>({
     query: gql`
       query profileQuery($username: String = "prochaLu") {
         user(login: $username) {
@@ -30,10 +30,10 @@ export default async function HomePage() {
           repositories(last: 10) {
             edges {
               node {
+                id
                 name
                 defaultBranchRef {
                   name
-                  id
                 }
               }
             }

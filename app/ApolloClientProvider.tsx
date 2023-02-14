@@ -10,7 +10,6 @@ type Props = {
 
 export default function ApolloClientProvider(props: Props) {
   const apolloClient = useApollo(JSON.parse(props.initialApolloState));
-
   return (
     <ApolloProvider client={apolloClient}>{props.children}</ApolloProvider>
   );

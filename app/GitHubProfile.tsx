@@ -6,17 +6,17 @@ import { useState } from 'react';
 import { GitHubProfileResponse } from './page';
 
 const githubQuery = gql`
-  query profileQuery($username: String = "prochaLu") {
-    user(login: $username) {
+  query profileQuery($name: String!) {
+    user(login: $name) {
       name
       avatarUrl
       repositories(last: 10) {
         edges {
           node {
+            id
             name
             defaultBranchRef {
               name
-              id
             }
           }
         }
@@ -27,6 +27,7 @@ const githubQuery = gql`
 
 export default function GitHubProfile() {
   const [username, setUsername] = useState('');
+
   const { loading, error, data, refetch } = useQuery<GitHubProfileResponse>(
     githubQuery,
     {
@@ -42,20 +43,17 @@ export default function GitHubProfile() {
 
   return (
     <div>
-      <form>
-        <input
-          value={username}
-          onChange={(event) => setUsername(event.currentTarget.value)}
-        />
-        <button
-          onClick={async (event) => {
-            event.preventDefault();
-            await refetch({ name: username });
-          }}
-        >
-          Get Profile
-        </button>
-      </form>
+      <input
+        value={username}
+        onChange={(event) => setUsername(event.currentTarget.value)}
+      />
+      <button
+        onClick={async () => {
+          await refetch({ name: username });
+        }}
+      >
+        Get Profile
+      </button>
       <h1>{data.user.name}'s Profile</h1>
       <Image
         src={data.user.avatarUrl}
@@ -65,7 +63,7 @@ export default function GitHubProfile() {
       />
       <h2>Repositories</h2>
       {data.user.repositories.edges.map((repository) => (
-        <li key={repository.node.id}>{repository.node.name}</li>
+        <li key={`repository-${repository.node.id}`}>{repository.node.name}</li>
       ))}
     </div>
   );

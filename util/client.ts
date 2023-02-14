@@ -12,7 +12,7 @@ function createApolloClient() {
     uri: 'https://api.github.com/graphql',
     cache: new InMemoryCache(),
     headers: {
-      authorization: `Bearer ${process.env.GIT_HUB_API}`,
+      authorization: `Bearer ${process.env.NEXT_PUBLIC_GIT_HUB_API}`,
     },
   });
 }
